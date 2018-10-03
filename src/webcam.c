@@ -4,12 +4,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#define CAPTURE_FRAMES "1"
+#include "pam_spy.h"
 
-typedef struct FFArgs {
-	char	device[64];
-	char	dest_path[64];
-} FFArgs;
+#define CAPTURE_FRAMES "1"
 
 int		take_snap(FFArgs args) {
 	return(execlp("ffmpeg",
@@ -26,10 +23,9 @@ int		snap(char *dest) {
 
 	strcpy(args.device, "/dev/video0");
 	strcpy(args.dest_path, dest);
-	if(take_snap(args) == -1)
+	if(take_snap(args) == -1) {
 		dprintf(2, "Error: %s.\n", strerror(errno));
-}
-
-int		main() {
-	snap("snap0.jpeg");
+		return (0);
+	}
+	return (1);
 }
